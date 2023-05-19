@@ -195,7 +195,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -310,15 +310,15 @@ void menu()
 			{
 				status = 2;
 				sprintf((char*)TXbuffer,
-						"BUTTON_STATUS MODE \r\n PRESS BLUE BUTTON: PRESS \r\n LEFT BLUE BUTTON: UNPRESS \r\n x: Back to menu \r\n");
+						"BUTTON_STATUS MODE \r\n PRESS USER BUTTON: PRESS \r\n LEFT USER BUTTON: UNPRESS \r\n x: Back to menu \r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				RXbuffer[0] = '\000';
 			}
 
-			else if(RXbuffer[0] != '0' && RXbuffer[0] != '1' && RXbuffer[0] != '\000' && RXbuffer[0] != '\0')
+			else if(RXbuffer[0] != '0' && RXbuffer[0] != '1' && RXbuffer[0] != '\000')
 			{
 				RXbuffer[0] = '\000';
-				sprintf((char*)TXbuffer,"Please choose other button \r\n");
+				sprintf((char*)TXbuffer,"Please press the right button \r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 			}
 
@@ -329,7 +329,7 @@ void menu()
 			if(RXbuffer[0] == 'a')
 			{
 				ledhz += 1;
-				sprintf((char*)TXbuffer,"Gain more HZ %d\r\n", ledhz);
+				sprintf((char*)TXbuffer,"---> HZ (+) %d\r\n", ledhz);
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				RXbuffer[0] = '\000';
 			}
@@ -337,7 +337,7 @@ void menu()
 			else if(RXbuffer[0] == 's')
 			{
 				ledhz -= 1;
-				sprintf((char*)TXbuffer,"Reduce HZ %d\r\n", ledhz);
+				sprintf((char*)TXbuffer,"<--- HZ (-) %d\r\n", ledhz);
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				RXbuffer[0] = '\000';
 				if(ledhz <= 1)
@@ -351,13 +351,13 @@ void menu()
 				if(ledonoff == 0)
 				{
 					ledonoff = 1;
-					sprintf((char*)TXbuffer,"LIGHT ON\r\n");
+					sprintf((char*)TXbuffer,"ON LIGHT\r\n");
 					HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				}
 				else if(ledonoff == 1)
 				{
 					ledonoff = 0;
-					sprintf((char*)TXbuffer,"LIGHT OFF\r\n");
+					sprintf((char*)TXbuffer,"OFF LIGHT\r\n");
 					HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				}
 				RXbuffer[0] = '\000';
@@ -366,7 +366,7 @@ void menu()
 			else if(RXbuffer[0] == 'x')
 			{
 				sprintf((char*)TXbuffer,
-						"\r\n\r\n\r\n\r\n\r\nChoose which of this topics\r\n 0: LED Control\r\n 1: Button Status\r\n");
+						"\r\n\r\n\r\n\r\n\r\nMain Menu\r\n 0: LED Control\r\n 1: Button Status\r\n\r\n\r\n\r\n\r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				status = 0;
 				RXbuffer[0] = '\000';
@@ -374,7 +374,7 @@ void menu()
 
 			else if(RXbuffer[0] != 'a' && RXbuffer[0] != 's' && RXbuffer[0] != 'd' && RXbuffer[0] != 'x' && RXbuffer[0] != '\000' && RXbuffer[0] != '\0'){
 				RXbuffer[0] = '\000';
-				sprintf((char*)TXbuffer,"Please choose other button \r\n");
+				sprintf((char*)TXbuffer,"Please press the right button \r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 			}
 
@@ -389,20 +389,20 @@ void menu()
 				timestamp2 = HAL_GetTick() + 1000;
 				if(!state)
 				{
-					sprintf((char*)TXbuffer,"Button Press \r\n");
+					sprintf((char*)TXbuffer,"Press \r\n");
 					HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				}
 
 				else if(state)
 				{
-					sprintf((char*)TXbuffer,"Button Unpress \r\n");
+					sprintf((char*)TXbuffer,"Unpress \r\n");
 					HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				}
 			}
 
 			if(RXbuffer[0] == 'x')
 			{
-				sprintf((char*)TXbuffer,"\r\n\r\n\r\n\r\n\r\nChoose which of this topics\r\n 0: LED Control\r\n 1: Button Status\r\n");
+				sprintf((char*)TXbuffer,"\r\n\r\n\r\n\r\n\r\nMain Menu\r\n 0: LED Control\r\n 1: Button Status\r\n\r\n\r\n\r\n\r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				status = 0;
 				RXbuffer[0] = '\000';
@@ -410,7 +410,7 @@ void menu()
 
 			else if(RXbuffer[0] != 'x' && RXbuffer[0] != '\000' && RXbuffer[0] != '\0')
 			{
-				sprintf((char*)TXbuffer,"Please choose other button \r\n");
+				sprintf((char*)TXbuffer,"Please press the right button \r\n");
 				HAL_UART_Transmit_DMA(&huart2, TXbuffer, strlen((char*)TXbuffer));
 				RXbuffer[0] = '\000';
 			}
